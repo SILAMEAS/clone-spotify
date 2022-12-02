@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { ImBackward, ImNext } from "react-icons/im";
 import { FaRegUserCircle } from "react-icons/fa";
 import { MdArrowDropDown } from "react-icons/md";
 import { CgMenuRight } from "react-icons/cg";
 import DropBox from "./Utils/DropBox";
-import { getCurrentUser } from "../../api_call/auth_api";
 import { useSelector } from "react-redux";
 
 const Navbar = ({ openSideBar, setOpenSideBar }) => {
   const [openBox, setOpenBox] = useState(false);
-  const my_token = useSelector((state) => state.auth.access_token);
-  useEffect(() => {
-    const getUser = getCurrentUser(my_token);
-  }, []);
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <div className="bg-slate-800 w-full h-[5rem] flex items-center  px-4 justify-between rounded-lg sk relative">
@@ -39,7 +35,7 @@ const Navbar = ({ openSideBar, setOpenSideBar }) => {
             setOpenBox(!openBox);
           }}
         />
-        <h2 className="font-bold ml-1">RBD SOUND</h2>
+        <h2 className="font-bold ml-1">{user.display_name}</h2>
         <MdArrowDropDown className="ml-1" />
       </div>
       {openBox && <DropBox className="transition duration-300" />}

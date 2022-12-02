@@ -1,6 +1,9 @@
 import React from "react";
 
 const DropBox = () => {
+  const removeToken = () => {
+    alert("remover");
+  };
   return (
     <>
       <div className="p-4 absolute top-[65%] right-0 bg-slate-700 w-40 h-40 z-10 rounded-lg ">
@@ -8,7 +11,10 @@ const DropBox = () => {
           {" "}
           Profile
         </p>
-        <p className="py-2 px-4 hover:bg-slate-500 cursor-pointer rounded-lg ">
+        <p
+          className="py-2 px-4 hover:bg-slate-500 cursor-pointer rounded-lg "
+          onClick={removeToken}
+        >
           Log out
         </p>
         <p className="py-2 px-4 hover:bg-slate-500 cursor-pointer rounded-lg ">

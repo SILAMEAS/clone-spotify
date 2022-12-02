@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import Library from "../LibraryContent/Library";
 import Footer from "./Footer/Footer";
@@ -14,6 +15,7 @@ function getWindowWidth() {
 }
 
 const HomePage = () => {
+  const { isPlay } = useSelector((state) => state.sportify);
   const [width, setWidth] = useState(getWindowWidth());
   useEffect(() => {
     function handleWindowResize() {
@@ -34,18 +36,23 @@ const HomePage = () => {
   const [openSideBar, setOpenSideBar] = useState(true);
   return (
     <div className="h-screen bg-black text-white flex flex-col overflow-y-hidden justify-between">
-      <div className="h-full flex max-w-full gap-2 rounded-lg w-full overflow-hidden mb-20 ">
+      <div
+        className={`h-full flex max-w-full gap-2 rounded-lg w-full overflow-hidden ${
+          isPlay && "mb-20"
+        }  `}
+      >
         <Sidebar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
         <div className="w-full">
           <Navbar openSideBar={openSideBar} setOpenSideBar={setOpenSideBar} />
-          <div className="overflow-auto h-full">
+          <div className="overflow-auto h-[80vh]">
             <Routes>
               <Route path="/home" element={<Home />} />
               <Route path="/search" element={<Search />} />
               <Route path="/library" element={<Library />} />
             </Routes>
           </div>
-          <Footer />
+
+          {isPlay && <Footer />}
         </div>
       </div>
     </div>

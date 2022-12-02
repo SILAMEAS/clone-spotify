@@ -1,14 +1,47 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { BsPlayFill } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setPlaylists } from "../../../Redux/slice/PlaylistsSlice";
+const base_url = "https://api.spotify.com/v1";
 
 const Home = () => {
-  const [playlist, setP] = useState([1, 2, 3, 4, 5, 56]);
   const [playlist1, setP1] = useState([
     1, 2, 3, 4, 5, 56, 56, 4, 43, 2, 3, 4, 45, 5, 5, 5,
   ]);
   const [img, setImg] = useState(
     "https://i1.sndcdn.com/artworks-000062467133-7goq9c-t500x500.jpg"
   );
+
+  const my_token = useSelector((state) => state.auth.access_token);
+  const PL = useSelector((state) => state.sportify.playlist);
+  const dispatch = useDispatch();
+
+  const PlayLists = async (access_token) => {
+    const response = await axios.get(
+      `https://api.spotify.com/v1/me/playlists`,
+      {
+        headers: {
+          Authorization: `Bearer ` + access_token,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const { data } = response;
+
+    dispatch(setPlaylists(data.items));
+
+    // console.log("------------------------------");
+    // console.log(user);
+  };
+
+  useEffect(() => {
+    PlayLists(my_token);
+  }, []);
+
   return (
     <>
       <div className="overflow-auto">
@@ -16,17 +49,21 @@ const Home = () => {
           Good morning
         </div>
         <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-3  gap-4 ">
-          {playlist.map((p) => {
-            return (
-              <div className="group lg:h-32  bg-gray-800 overflow-hidden rounded-lg flex items-center justify-between">
+          {" "}
+          {PL &&
+            PL.map((p, index) => (
+              <div
+                key={index}
+                className="group lg:h-32  bg-gray-800 overflow-hidden rounded-lg flex items-center justify-between"
+              >
                 <div className="flex items-center ">
                   <img
-                    src={img}
+                    src={p.images[0].url}
                     alt="singer"
                     className="lg:w-32 md:w-32  w-16 object-cover"
                   />
                   <h1 className="ml-4 text-lg lg:text-xl font-semibold">
-                    Pop Mix
+                    {p.name}
                   </h1>
                 </div>
 
@@ -34,13 +71,12 @@ const Home = () => {
                   <BsPlayFill />
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
         <div className="mt-4 text-lg lg:text-xl font-bold mb-5">
           Your Top Mix
         </div>
-        <div className="grid lg:grid-cols-6  md:grid-cols-4 grid-cols-2 lg:gap-6 gap:4">
+        <div className="grid lg:grid-cols-6  md:grid-cols-4 grid-cols-2 lg:gap-6 gap:4 ">
           {playlist1.map((i) => {
             return (
               <div className="cart lg:h-64  h-70 p-4 overflow-hidden  hover:bg-gray-800 transition duration-300 ease-in-out cursor-pointer group relative flex flex-col justify-start">
